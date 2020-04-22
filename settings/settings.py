@@ -27,6 +27,13 @@ class setting:
                 raise ValueError("Need to install Settings")
         except:
             raise ValueError("Need to install Settings")
+        try:
+            self.get_fullscreen()
+            self.get_wide()
+            self.get_fps()
+            self.get_show_fps()
+        except:
+            raise ValueError("Need to install Settings")
 
 
     def select(self, table: str, items: list = ["*"], where: str = "1"):
@@ -39,7 +46,8 @@ class setting:
         except:
             return False
 
-    def fullscreen(self):
+    # Get Function
+    def get_fullscreen(self):
         try:
             if self.select("window", where="name='fullscreen'")[0][1] == "True":
                 return True
@@ -47,7 +55,6 @@ class setting:
                 return False
         except:
             raise ValueError("Need to install Settings")
-
     def get_wide(self):
         try:
             x = int(self.select("window", where="name='x'")[0][1])
@@ -55,10 +62,17 @@ class setting:
         except:
             raise ValueError("Need to install Settings")
         return x, y
-
     def get_fps(self):
         try:
             fps = int(self.select("window", where="name='fps'")[0][1])
         except:
             raise ValueError("Nedd to install Settings")
         return fps
+    def get_show_fps(self):
+        try:
+            if self.select("window", where="name='showfps'")[0][1] == "True":
+                return True
+            else:
+                return False
+        except:
+            raise ValueError("Need to install Settings")

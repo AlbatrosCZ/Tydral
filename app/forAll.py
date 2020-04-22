@@ -6,10 +6,15 @@ class forAll:
         self.mouse_up = [False, []]
         self.key_up = [False, []]
 
+        if self.mouse_down[0]:
+            for i in self.mouse_down[2].keys():
+                if self.mouse_down[2][i] == 0:
+                    self.mouse_down[2][i] = 1
+
         for event in events:
             if event.type == 2: # KeyDown
                 self.key_down[0] = True
-                self.key_down[1].append([event.key, event])
+                self.key_down[1].append([event.key, event, 0])
 
             elif event.type == 3: # KeyUp
                 for i in range(len(self.key_down[1])):
@@ -24,11 +29,13 @@ class forAll:
             elif event.type == 5: # MouseButtonDown
                 self.mouse_down[0] = True
                 self.mouse_down[1].append(event.button)
+                self.mouse_down[2][event.button] = 0
 
             elif event.type == 6: # MouseButtonUp
                 for i in range(len(self.mouse_down[1])):
                     if self.mouse_down[1][i] == event.button:
                         del self.mouse_down[1][i]
+                        self.mouse_down[2][event.button] = -1
                         break
                 if self.mouse_down[1] == []:
                     self.mouse_down[0] = False
@@ -38,10 +45,15 @@ class forAll:
             elif event.type == 12: # Quit
                 return True
 
+        if self.key_down[0]:
+            for i in range(len(self.key_down[1])):
+                self.key_down[1][i][2] += 1
+
+        
         return False
     
     def null(self):
-        self.mouse_down = [False, []]
+        self.mouse_down = [False, [], {}]
         self.key_down = [False, []]
 
         self.mouse_up = [False, []]

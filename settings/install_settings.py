@@ -10,6 +10,11 @@ def make(root, entryes):
         fullscreen = "False"
     else:
         fullscreen = "True"
+    showFPS = entryes[3].get()
+    if showFPS != "":
+        showFPS = "False"
+    else:
+        showFPS = "True"
     fps = int(entryes[2].get())
     if size == 0:
         x = GetSystemMetrics(0)
@@ -44,7 +49,7 @@ def make(root, entryes):
     curs.execute("INSERT INTO Window(name, value) VALUES('y', {})".format(y))
     curs.execute("INSERT INTO Window(name, value) VALUES('fullscreen', '{}')".format(fullscreen))
     curs.execute("INSERT INTO Window(name, value) VALUES('fps', {})".format(fps))
-    print("window set to x {}, y {}, \nfullscreen {}, max fps {} \nto {}".format(x, y, fullscreen, fps, path))
+    curs.execute("INSERT INTO Window(name, value) VALUES('showfps', '{}')".format(showFPS))
     root.destroy()
 
 
@@ -74,6 +79,7 @@ def install_settings():
     Label(root, text = "Screen Size").place(x = 10, y = 50)
     Label(root, text = "Max Fps").place(x = 10, y = 100)
     Label(root, text = "Full Screen").place(x = 10, y = 150)
+    Label(root, text = "Show FPS").place(x = 10, y = 200)
 
     a = Label(root, text = "")
     a.place(x = 210, y = 50)
@@ -108,11 +114,12 @@ def install_settings():
     full = StringVar() 
     Checkbutton(root, text="", variable = full, onvalue = "True").place(x = 100, y = 150)
 
+    showfps = StringVar() 
+    Checkbutton(root, text="", variable = showfps, onvalue = "True").place(x = 100, y = 200)
 
+    entryes = [size, full, fps, showfps]
 
-    entryes = [size, full, fps]
-
-    Button(root, text = "Finish", command = lambda: make(root, entryes)).place(x = 50, y = 200)
+    Button(root, text = "Finish", command = lambda: make(root, entryes)).place(x = 150, y = 200)
 
     root.mainloop()
 install_settings()

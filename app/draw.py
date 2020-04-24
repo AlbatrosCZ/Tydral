@@ -1,5 +1,6 @@
 import pygame, sys, os, threading
 from pygame.locals import *
+import string
 
 pygame.init()
 pygame.mixer.init()
@@ -16,6 +17,11 @@ class drawer:
         else:
             self.display = pygame.display.set_mode([self.width, self.height])
         pygame.display.set_caption('Tydral')
+
+        self.abc = []
+        for i in list(string.printable):
+            if i not in list(string.whitespace):
+                self.abc.append(i)
 
         self.images = {}
         self.fonts = {}
@@ -101,10 +107,11 @@ class drawer:
                 size = args["size"]
             except:
                 size = 50
-            self.draw_img(geometry[4], geometry)
-            self.draw_text((geometry[0] + 5, geometry[1] + 5), text, size, font, colors[1])
+            self.draw_img(geometry[4], (geometry[0], geometry[1], geometry[2], geometry[3]))
+            self.draw_text((geometry[0] + 5, geometry[1] + 5), text, size, font, colors)
         elif typ == "fullimage":
             self.draw_img(geometry[4], geometry)
+        mouse = pygame.mouse.get_pos()
         if geometry[0] < mouse[0] < geometry[0] + geometry[2] and geometry[1] < mouse[1] < geometry[1] + geometry[3]:
             try:
                 equal = False
@@ -157,6 +164,8 @@ class drawer:
         elif typ == "image":
             try:
                 colors = args["colors"]
+                if len(colors) < 2:
+                    colors = [0, colors[0]]
             except:
                 raise ValueError("colors is not define")
             try:
@@ -167,6 +176,8 @@ class drawer:
                 size = args["size"]
             except:
                 size = 50
+            self.draw_img(geometry[4], (geometry[0], geometry[1], geometry[2], geometry[3]))
+            
         fps = self.settings.get_fps()
         if self.event_info.get_keys()[0] and write:
             for i in self.event_info.get_keys()[0]:
@@ -182,7 +193,7 @@ class drawer:
                     elif i[0] == K_RIGHT:
                         if show < len(text)-1:
                             show += 1
-                    elif i[1].unicode != "":
+                    elif i[1].unicode in self.abc:
                         text += i[1].unicode
         mouse = pygame.mouse.get_pos()
         try:

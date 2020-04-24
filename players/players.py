@@ -38,13 +38,16 @@ class players:
             return False
 
     def add(self, nickname, password):
-        path = "players/{}".format(nickname)
+        path = "players/{}.db".format(nickname)
         try:
             self.curs.execute("""INSERT INTO players(nickname, password, characters) 
         VALUES('{}', '{}', '{}')""".format(nickname, password, path))
         except:
             return False
-        open(path, "w").close()
+        try:
+            open(path, "w").close()
+        except:
+            return False
 
         connection = connect(path)
         connection.isolation_level = None

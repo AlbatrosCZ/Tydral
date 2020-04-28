@@ -23,15 +23,18 @@ def set_to_database(root, curs, var):
         curs[0].execute("""INSERT INTO players(nickname, password, characters) 
         VALUES('{}', '{}', '{}')""".format(var[0].get(), var[1].get(), path))
         root.destroy()
-        install_character(path)
+        install_character(path, var[0].get(), var[1].get())
     
-def install_character(path):
+def install_character(path, nickname, password):
     open(path, "w").close()
 
     connection = connect(path)
     connection.isolation_level = None
 
     curs = connection.cursor()
+    curs.execute("""CREATE TABLE info(
+                    name VARCHAR PRIMARY KEY,
+                    value VARCHAR NOT NULL)""")
     curs.execute("""CREATE TABLE character(
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             name VARCHAR NOT NULL,
@@ -42,7 +45,13 @@ def install_character(path):
                             class INTEGER NOT NULL,
                             race INTEGER NOT NULL,
                             special VARCHAR NOT NULL,
-                            exp INTEGER NOT NULL)""")
+                            exp INTEGER NOT NULL,
+                            coins INTEGER)""")
+    curs.execute("""CREATE TABLE inventory(id_character INTEGER NOT NULL,
+                                            item_name VARCHAR NOT NULL)""")
+    curs.execute("""INSERT INTO info(name, value) VALUES('nickname', '{}')""".format(nickname))
+    curs.execute("""INSERT INTO info(name, value) VALUES('password', '{}')""".format(password))
+    curs.execute("""INSERT INTO info(name, value) VALUES('player_type', '{}')""".format("player"))
 
 
 def create_player(cursor): 
@@ -87,4 +96,3 @@ def install_players():
     Button(root, text = "Stop", command = lambda: root.destroy()).place(x = 165, y = 50)
 
     root.mainloop()
-install_players()

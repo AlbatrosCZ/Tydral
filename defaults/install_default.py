@@ -151,10 +151,7 @@ class item:
 
 def make(root, var):
     path = "defaults/default.db"
-    try:
-        open(path).close()
-    except:
-        open(path, "w").close()
+    open(path, "w").close()
 
     connection = connect(path)
     connection.isolation_level = None
@@ -215,7 +212,7 @@ def list_dir(root, path = "defaults"):
             a += a1
     return a, y
 
-def install_players():
+def install_default():
     root = Tk()
     root.geometry("50x50+100+100")
     root.title("create default database")
@@ -236,6 +233,3 @@ def install_players():
     
 
     root.mainloop()
-
-
-install_players()

@@ -1,5 +1,4 @@
 from sqlite3 import * 
-from win32api import GetSystemMetrics
 from tkinter import *
 
 def make(root, entryes):
@@ -17,8 +16,8 @@ def make(root, entryes):
         showFPS = "True"
     fps = int(entryes[2].get())
     if size == 0:
-        x = GetSystemMetrics(0)
-        y = GetSystemMetrics(1)
+        x = root.winfo_screenwidth()
+        y = root.winfo_screenheight()
         if x >= 1366:
             maxim = 4
         elif x >= 1360:
@@ -93,7 +92,7 @@ def install_settings():
     b.place(x = 210, y = 100)
     fps.place(x = 100 , y = 100)
 
-    x = GetSystemMetrics(0)
+    x = root.winfo_screenwidth()
     if x >= 1366:
         maxim = 4
     elif x >= 1360:
@@ -122,4 +121,3 @@ def install_settings():
     Button(root, text = "Finish", command = lambda: make(root, entryes)).place(x = 150, y = 200)
 
     root.mainloop()
-install_settings()

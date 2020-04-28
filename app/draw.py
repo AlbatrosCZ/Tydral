@@ -110,7 +110,7 @@ class drawer:
             self.draw_img(geometry[4], (geometry[0], geometry[1], geometry[2], geometry[3]))
             self.draw_text((geometry[0] + 5, geometry[1] + 5), text, size, font, colors)
         elif typ == "fullimage":
-            self.draw_img(geometry[4], geometry)
+            self.draw_img(geometry[4], (geometry[0], geometry[1], geometry[2], geometry[3]))
         mouse = pygame.mouse.get_pos()
         if geometry[0] < mouse[0] < geometry[0] + geometry[2] and geometry[1] < mouse[1] < geometry[1] + geometry[3]:
             try:

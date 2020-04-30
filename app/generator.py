@@ -380,6 +380,21 @@ class generator:
             self.drawer.draw_shape("rect", (100, self.drawer.height//2 - 25, int((self.drawer.width-200)*(self.have/self.need)), 50), (50, 150, 50))
             pygame.display.update()
         return places
+
+    def add_place(self, t_v, map_class):
+        to_generate = 1
+        use = 15
+        while to_generate > 0 and use:
+            x = randint(1,1023)
+            y = randint(1,1023)
+            i = to_generate%4
+            if 400 > map_class.get_field(x, y) > 150:
+                if t_v == "town":
+                    map_class.places_list["{},{}".format(x,y)] = self.generate_town()
+                else:
+                    map_class.places_list["{},{}".format(x,y)] = self.generate_village()
+                to_generate -= 1
+            use -= 1
             
 
 def doname():

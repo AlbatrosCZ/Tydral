@@ -79,3 +79,13 @@ class forAll:
         else:
             return self.key_down[1], self.key_up[1]
             
+    def is_in(self, key):
+        if type(key) == str:
+            for i in self.key_down[1]:
+                if i[1].unicode == key:
+                    return True, i[2]
+        elif type(key) == int:
+            for i in self.key_down[1]:
+                if i[0] == key:
+                    return True, i[2]
+        return False, 0

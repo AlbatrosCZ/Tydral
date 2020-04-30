@@ -79,12 +79,14 @@ editor_x = 0
 editor_y = 0
 editor_town_sleep = 0
 
+active_character = None
+
 a = 0           # FPS counter
 now = t.time()
 print("\rGame start now                       ")
 while True:
     mouse = pygame.mouse.get_pos()
-    if app_step not in ["editor", "full", "stay_full"]:
+    if app_step not in ["editor", "full", "stay_full", "game"]:
         draw.draw_img("textures/Wood Board.jpg", (0, 0, draw.width, draw.height))
     elif app_step != "stay_full":
         draw.display.fill((0,0,0))
@@ -185,7 +187,7 @@ while True:
             app_step = "setting_setting"
             exit_game = True
         elif you:
-            app_step = "you_"
+            app_step = "you"
         elif default:
             app_step = "setting_default"
             exit_game = True
@@ -229,6 +231,8 @@ while True:
         gen = draw.draw_button("image", (draw.width - 250, 100, 250, 50, "textures/paper.png"), colors = (0,0,0), text = "Generate new")
         full = draw.draw_button("image", (draw.width - 250, 150, 250, 50, "textures/paper.png"), colors = (0,0,0), text = "Show Full Map")
         if gen:
+            draw.display.fill((0,0,0))
+            pygame.display.update()
             active_map = gener.generate()
         if full:
             app_step = "full"
@@ -288,7 +292,7 @@ while True:
         
         draw.draw_shape("rect", (draw.height, 0, draw.width - draw.height, draw.height), (0,0,0))
         
-        y = 50
+        y = 100
         slep = editor_town_sleep
 
         for i in active_map.places_list.keys():
@@ -296,7 +300,17 @@ while True:
                 if y + 200 > draw.height:
                     break 
                 draw.draw_img("textures/paper.jpg", (draw.height+10, y, draw.width - draw.height - 150, 200))
-                draw.draw_text((draw.height+10, y), active_map.places_list[i].name, color = (0,0,0))
+                if type(active_map.places_list[i]) == town:
+                    draw.draw_text((draw.height+10, y), "Town: "+active_map.places_list[i].name, color = (0,0,0))
+                if type(active_map.places_list[i]) == village:
+                    draw.draw_text((draw.height+10, y), "Village: "+active_map.places_list[i].name, color = (0,0,0))
+                draw.draw_text((draw.height+10, y+50), "X:" + i.split(",")[0] + "   Y:" + i.split(",")[1], color = (0,0,0))
+                rem = draw.draw_button("image", (draw.height+10, y+100, 250, 50, "textures/paper.png"), colors = (0,0,0), text = "Remove")
+                if rem:
+                    del active_map.places_list[i]
+                    app_step = "full"
+                    draw.display.fill((0,0,0))
+                    break
                 y += 220
             else:
                 slep -= 1
@@ -308,12 +322,47 @@ while True:
             place_down = draw.draw_button("fullimage", (draw.width-100, 400, 50, 50, "textures/down.png")) 
             if place_down:
                 editor_town_sleep += 1
+        add_t = draw.draw_button("image", (draw.height+10, 20, 190, 50, "textures/paper.png"), colors = (0,0,0), text = "Add Town")
+        add_v = draw.draw_button("image", (draw.height+200, 20, 190, 50, "textures/paper.png"), colors = (0,0,0), text = "Add Village")
         back = draw.draw_button("image", (draw.width - 100, 100, 100, 50, "textures/paper.png"), colors = (0,0,0), text = "Back")
+        if add_t:
+            gener.add_place("town", active_map)
+            app_step = "full"
+        if add_v:
+            gener.add_place("village", active_map)
+            app_step = "full"
         if back:
             app_step = "editor"
+    # end editor ---------- start game
+    if app_step == "game":
+        if active_character != None:
+            for x in range(0,7):
+                for y in range(0,7):
+                    x_ = x
+                    y_ = y
+                    if len(active_map.map_list)-3 > player_x > 2:
+                        x_ = x +  - 2
+                    if len(active_map.map_list)-3 > player_y > 2:
+                        y_ = y + player_y - 2
+                    draw.draw_shape("rect", (x*int(draw.height//50), y*int(draw.height//50), int(draw.height//50)-2, int(draw.height//50)-2), get_map_color(active_map.get_field(x_, y_)))
+            up = eventInfo.is_in(273)
+            down = eventInfo.is_in(274)
+            right = eventInfo.is_in(275)
+            left = eventInfo.is_in(276)
+            if up[0] and up[1] == 1:
+                print("UP")
+            if down[0] and down[1] == 1:
+                print("DOWN")
+            if right[0] and right[1] == 1:
+                print("RIGHT")
+            if left[0] and left[1] == 1:
+                print("LEFT")
+        else:
+            app_step = "you"
+
     escape = eventInfo.get_keys()
 
-    if settings.get_show_fps() and app_step not in ["stay_full"]:
+    if settings.get_show_fps() and app_step not in ["stay_full", "full"]:
         a+=1
         fpsnow = a//(t.time() - now)
         if fpsnow > fps:

@@ -19,19 +19,17 @@ def make(root, entryes):
         x = root.winfo_screenwidth()
         y = root.winfo_screenheight()
         if x >= 1366:
-            maxim = 4
-        elif x >= 1360:
             maxim = 3
-        elif x >= 1280:
+        elif x >= 1360:
             maxim = 2
-        elif x >= 1024:
+        elif x >= 1280:
             maxim = 1
-        sizes = {4:"1366x768", 3: "1360x768", 2: "1280x768", 1: "1024x768"}
+        sizes = {3:"1366x768", 2: "1360x768", 1: "1280x768"}
         x, y = sizes[maxim].split("x")
         x = int(x)
         y = int(y)
     else:
-        sizes = {4:"1366x768", 3: "1360x768", 2: "1280x768", 1: "1024x768"}
+        sizes = {3:"1366x768", 2: "1360x768", 1: "1280x768"}
         x, y = sizes[size].split("x")
         x = int(x)
         y = int(y)
@@ -53,7 +51,7 @@ def make(root, entryes):
 
 
 def sizer(var, label):
-    sizes = {0:"auto", 4:"1366 x 768", 3: "1360 x 768", 2: "1280x768", 1: "1024x768"}
+    sizes = {0:"auto", 3:"1366x768", 2: "1360x768", 1: "1280x768"}
     a = var.get()
     label.config(text = sizes[a])
 
@@ -94,12 +92,10 @@ def install_settings():
 
     x = root.winfo_screenwidth()
     if x >= 1366:
-        maxim = 4
-    elif x >= 1360:
         maxim = 3
-    elif x >= 1280:
+    elif x >= 1360:
         maxim = 2
-    elif x >= 1024:
+    elif x >= 1280:
         maxim = 1
     elif x < 1024:
         raise ValueError("Your Monitor is too tiny")

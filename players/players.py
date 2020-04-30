@@ -94,6 +94,9 @@ class players:
 
 class Player:
     def __init__(self, nickname, password):
+        self.nickname = nickname
+        self.password = password
+
         path = "players/{}.db".format(nickname)
         try:
             open(path)
@@ -139,6 +142,9 @@ class Player:
             pass
     
     def add(self, name, class_, race, special):
+        self.curs.execute("SELECT * FROM character WHERE name = '{}'")
+        if self.fetchall() != []:
+            return False
         lives = class_.lives + race.lives
         mana = class_.lives + race.lives
         exp = 0
@@ -150,9 +156,22 @@ class Player:
         special = special_[:-1]
         self.curs("""INSERT INTO character(name, maxLives, maxMana, class, race, special, exp)
                                     VALUES('{}', {}, {}, '{}', '{}', '{}' {})""".format(name, lives, mana, class_.name, race.name, special, exp))
+        return True
 
-    def edit(self, value, new_value, password):
-        pass
+    def edit(self, value, new_value, char_name):
+        if value != "special":
+            self.curs.execute("UPDATE character SET {}={} WHERE name='{}'".format(value, new_value, char_name))
+        else:
+            self.curs.execute("UPDATE character SET {}='{}' WHERE name='{}'".format(value, new_value, char_name))
 
-    def get(self):
-        pass
+    def get_character(self, name):
+        self.curs.execute("SELECT * FROM character WHERE name='{}'".format(name))
+        return self.curs.fetchall()
+
+    def get_characters_names(self):
+        self.curs.execute("SELECT name FROM character")
+        ret = self.curs.fetchall()
+        retu = []
+        for i in ret:
+            retu.append(i[0])
+        return retu

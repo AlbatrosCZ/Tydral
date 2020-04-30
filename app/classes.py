@@ -53,12 +53,6 @@ class village(town):
         super().__init__(name, village_map, 0, lead_race, buildings)
         self.village_map = village_map
 
-class cave:
-    def __init__(self, cave_map, traps, chests):
-        self.cave_map = cave_map
-        self.traps = traps
-        self.chests = chests
-
 class building:
     def __init__(self, name, typ, **args):
         self.name = name

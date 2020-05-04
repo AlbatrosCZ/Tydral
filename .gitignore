@@ -3,3 +3,5 @@ tempCodeRunnerFile.*
 no_*
 *.db
 *.vscode
+*.tmap
+*.def

@@ -46,9 +46,12 @@ def install_character(path, nickname, password):
                             race INTEGER NOT NULL,
                             special VARCHAR NOT NULL,
                             exp INTEGER NOT NULL,
-                            coins INTEGER)""")
+                            money INTEGER)""")
     curs.execute("""CREATE TABLE inventory(id_character INTEGER NOT NULL,
                                             item_name VARCHAR NOT NULL)""")
+    curs.execute("""CREATE TABLE bonuses(id_character INTEGER NOT NULL,
+                                                       bonus_var VARCHAR NOT NULL,
+                                                       bonus_value VARCHAR)""")
     curs.execute("""INSERT INTO info(name, value) VALUES('nickname', '{}')""".format(nickname))
     curs.execute("""INSERT INTO info(name, value) VALUES('password', '{}')""".format(password))
     curs.execute("""INSERT INTO info(name, value) VALUES('player_type', '{}')""".format("player"))

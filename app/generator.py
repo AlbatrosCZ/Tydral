@@ -178,17 +178,7 @@ class generator:
                         map_list[j][x] = 2
                         map_list[j][x+x_] = 2
 
-                    side = randint(0,1)
-                    tops = [x, x+x_]
-                    sides = [y, y+y_]
-                    if side == 0:
-                        xx = tops[randint(0,1)]
-                        yy = randint(y, y+y_)
-                    if side == 1:
-                        yy = sides[randint(0,1)]
-                        xx = randint(x, x+x_)
-                    map_list[yy][xx] = 4
-                    buildings[min_buildings] = "{},{},{},{},{},{}".format(x, y, x_, y_, xx, yy)
+                    buildings[min_buildings] = "{},{},{},{}".format(x, y, x_, y_)
 
                     for i in range(x+1, x+x_):
                         for j in range(y+1, y+y_):
@@ -261,17 +251,7 @@ class generator:
                         map_list[j][x] = 2
                         map_list[j][x+x_] = 2
 
-                    side = randint(0,1)
-                    tops = [x, x+x_]
-                    sides = [y, y+y_]
-                    if side == 0:
-                        xx = tops[randint(0,1)]
-                        yy = randint(y, y+y_)
-                    if side == 1:
-                        yy = sides[randint(0,1)]
-                        xx = randint(x, x+x_)
-                    map_list[yy][xx] = 4
-                    buildings[min_buildings] = "{},{},{},{},{},{}".format(x, y, x_, y_, xx, yy)
+                    buildings[min_buildings] = "{},{},{},{}".format(x, y, x_, y_)
 
                     for i in range(x+1, x+x_):
                         for j in range(y+1, y+y_):
@@ -312,53 +292,53 @@ class generator:
     def generate_town(self):
         map_list, buildings = self.generate_town_map("town")
         try:
-            buildings = self.generate_building(buildings, randint(8, max(buildings.keys()) - 8), "town")
+            buildings = self.generate_building(buildings, "town")
         except:
-            buildings = self.generate_building(buildings, randint(8, max(buildings.keys())), "town")
+            buildings = self.generate_building(buildings, "town")
         return town(doname(), map_list, randint(0,150), None, buildings)
 
     def generate_village(self):
         map_list, buildings = self.generate_town_map("village")
         try:
-            buildings = self.generate_building(buildings, randint(4, max(buildings.keys()) - 8), "village")
+            buildings = self.generate_building(buildings, "village")
         except:
-            buildings = self.generate_building(buildings, randint(4, max(buildings.keys())), "village")
+            buildings = self.generate_building(buildings, "village")
         return village(doname(), map_list, None, buildings)
 
-    def generate_building(self, buildings_pozitions, buildings_max, typ):
+    def generate_building(self, buildings_pozitions, typ):
         buildings = {}
         buildings_def = {0:("Casel"), 1:("Town Hall"), 2:("Cathedral", "Church", "Chapel"), 3:("Tavern"), 4:("Shop", "Marketplace"), 5:("Wizzard", "School")}
-        to_build = 3
-        while buildings_max != 0:
-            build_ = randint(0, max(buildings_pozitions.keys()))
-            try:
-                build = buildings_pozitions[build_]
-                build = build.split(",")
-                for i in range(len(build)):
-                    build[i] = int(build[i])
-                if to_build == 3:
-                    buildings[buildings_max] = building(buildings_def[3], buildings_def[3], build = build)
-                elif to_build == 2:
-                    if typ == "town" and random() > 0.8:
-                        buildings[buildings_max] = building(buildings_def[0], buildings_def[0], build = build)
-                    else:
-                        buildings[buildings_max] = building(buildings_def[1], buildings_def[1])
-                elif to_build == 1:
-                    build_typ = randint(0,2)
-                    buildings[buildings_max] = building(buildings_def[2][build_typ], buildings_def[2][build_typ], build = build)
-                else:
-                    if random() >= 0.5:
-                        build_typ = randint(0,1)
-                        buildings[buildings_max] = building(buildings_def[4][build_typ], buildings_def[4][build_typ], build = build)
-                    else:
-                        build_typ = randint(0,1)
-                        buildings[buildings_max] = building(buildings_def[5][build_typ], buildings_def[5][build_typ], build = build)
-                del buildings_pozitions[build_]
-                del build_
-                to_build -= 1
-                buildings_max -= 1
-            except LookupError as er:
-                pass
+
+        if random() < 0.3 and typ == "town":
+            buildings[len(buildings)] = building(buildings_def[0], buildings_def[0])
+        elif random() < 0.9:
+            buildings[len(buildings)] = building(buildings_def[1], buildings_def[1])
+        
+        if random() < 0.2 and typ == "town":
+            buildings[len(buildings)] = building(buildings_def[2][0], buildings_def[2][0])
+        elif random() < 0.4:
+            buildings[len(buildings)] = building(buildings_def[2][1], buildings_def[2][1])
+        else:
+            buildings[len(buildings)] = building(buildings_def[2][2], buildings_def[2][2])
+
+        if random() < 0.99:
+            buildings[len(buildings)] = building(buildings_def[3], buildings_def[3]) 
+        
+        if random() < 0.7:
+            buildings[len(buildings)] = building(buildings_def[4][0], buildings_def[4][0])
+            shop = 0.7
+        else:
+            shop = 0.0
+
+        if random() < 1.0 - shop:
+            buildings[len(buildings)] = building(buildings_def[4][1], buildings_def[4][1])
+
+        if random() < 0.4:
+            buildings[len(buildings)] = building(buildings_def[5][0], buildings_def[5][0])
+
+        if random() < 0.4:
+            buildings[len(buildings)] = building(buildings_def[5][1], buildings_def[5][1])
+
         return buildings
 
     def generate_map_places(self, minimal = 50, maximal = 150, village_to_town = 3):

@@ -181,12 +181,18 @@ def make(root, var):
                                                     some_id INTEGER NOT NULL, 
                                                     bounus_id INTEGER NOT NULL, 
                                                     special_value VARCHAR,
-                                                    duration INTEGER)""") # 1 = use only, 2 = equip and unequip, 3 = evry round where equiped
+                                                    duration INTEGER)""") # 1 = use only, 2 = equip and unequip, 3 = evry round when equiped
     curs.execute("""CREATE TABLE IF NOT EXISTS bonus(
                                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                                                     name VARCHAR NOT NULL, 
                                                     function VARCHAR NOT NULL, 
                                                     special_value INTEGER NOT NULL)""")
+    curs.execute("""CREATE TABLE IF NOT EXISTS mission(
+                                                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                                                name VARCHAR NOT NULL, 
+                                                                todo VARCHAR, 
+                                                                price VARCHAR NOT NULL,
+                                                                open VARCHAR NOT NULL)""")
 
     for i in var[0]:
 

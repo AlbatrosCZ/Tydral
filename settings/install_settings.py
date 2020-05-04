@@ -85,7 +85,7 @@ def install_settings():
     b_var = DoubleVar()
     b_var.trace("w", lambda p0="", p1="", p2="": faster(b_var, fps))
     b = Spinbox(root, textvariable = b_var, width = 30)
-    b_var.set(60)
+    b_var.set(200)
     fps.config(command = lambda p0="", p1="", p2="": reverse_faster(b_var, fps))
     b.place(x = 210, y = 100)
     fps.place(x = 100 , y = 100)
